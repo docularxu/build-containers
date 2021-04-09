@@ -7,9 +7,21 @@ RUN apt install -y -q bc sudo
 RUN apt install -y -q cpio
 RUN apt install -y -q python3
 RUN apt install -y -q autoconf automake binutils
-RUN apt install -y -q kmod
+RUN apt install -y -q kmod vim git
+
+RUN apt install -y -q gcc-9 g++-9
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+#
+# update-alternatives --config gcc
+# update-alternatives --config g++
+#
 
 RUN groupadd -g 1002 -o guodong
+
 RUN useradd -u 1001 -g 1002 -G sudo -ms /bin/bash guodong
 RUN echo "guodong:guodong" | chpasswd
 
