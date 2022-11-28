@@ -1,0 +1,43 @@
+FROM debian:bullseye-20221004
+
+RUN apt update && \
+    apt install -y -q build-essential libncurses-dev bison flex libssl-dev libelf-dev dwarves
+
+RUN apt install -y -q bc sudo
+RUN apt install -y -q cpio
+RUN apt install -y -q python3
+RUN apt install -y -q autoconf automake binutils
+RUN apt install -y -q kmod vim git
+RUN apt install -y -q man-db manpages-dev
+
+RUN apt install -y -q gcc g++
+# which contains gcc version 10.2.1 20210110 (Debian 10.2.1-6)
+
+# RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
+# RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
+# RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+# RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+#
+# update-alternatives --config gcc
+# update-alternatives --config g++
+#
+
+RUN apt install -y -q cmake
+
+# Test 2 framework Perl
+RUN apt install -y -q perl cpanminus
+RUN cpanm Test2
+RUN cpanm Test2::V0
+
+# handy tools
+RUN apt install -y -q tree
+
+RUN groupadd -g 1000 -o guodong
+
+RUN useradd -u 1000 -g 1000 -G sudo -ms /bin/bash guodong
+RUN echo "guodong:guodong" | chpasswd
+
+USER guodong
+
+CMD ["bash"]
