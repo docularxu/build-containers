@@ -31,7 +31,12 @@ RUN cpanm Test2
 RUN cpanm Test2::V0
 
 # handy tools
-RUN apt install -y -q tree
+RUN apt install -y -q tree htop
+
+# libtool
+RUN apt install -y -q libtool
+# nasm, General-purpose x86 assembler
+RUN apt install -y -q nasm
 
 RUN groupadd -g 1000 -o guodong
 
