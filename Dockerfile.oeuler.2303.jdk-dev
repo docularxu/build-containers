@@ -1,0 +1,33 @@
+FROM openeuler/openeuler:23.03
+
+RUN yum update
+RUN yum install -y -q bc sudo
+
+RUN groupadd guodong
+RUN useradd -m -u 1000 -g guodong -G wheel -m -s /bin/bash guodong
+RUN echo "guodong:guodong" | chpasswd
+
+RUN yum install -y -q cpio
+RUN yum install -y -q python3
+RUN yum install -y -q autoconf automake binutils
+RUN yum install -y -q kmod vim git
+RUN yum install -y -q man-db
+
+# OpenJDK8 build preparations
+RUN sed -i 's|repo.openeuler.org|mirrors.aliyun.com/openeuler|' /etc/yum.repos.d/openEuler.repo
+RUN yum update
+
+RUN yum install -y -q java-1.8.0-openjdk-devel.aarch64
+RUN yum install -y -q libXtst-devel libXt-devel libXrender-devel
+RUN yum install -y -q cups-devel
+RUN yum install -y -q freetype-devel
+RUN yum install -y -q alsa-lib-devel
+RUN yum install -y -q fontconfig-devel
+RUN yum install -y -q openssl-devel.aarch64
+RUN yum -y -q groupinstall "Development Tools"
+RUN yum -y -q cmake
+
+# Set the user and working directory to /home/guodong
+USER guodong
+WORKDIR /home/guodong
+CMD ["bash"]
