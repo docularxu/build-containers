@@ -25,6 +25,13 @@ or
 
     docker exec -it [container_name] /bin/bash
 
-# UADK mapping a hardware accelerators into the docker container
+# UADK build and testing in a docker container: Dockerfile.ubuntu.2204.uadk-dev
 
-    docker-run-uadk-dev.sh
+This Dockerfile is used to create a build and test environment for UADK and it is based on ubuntu:22.04 image dated on 8/Mar/2024.
+
+    docker build -t uadk-dev:ubuntu.2204 - < Dockerfile.ubuntu.2204.uadk-dev
+
+To consume the image built, one need to run the following shell script to map hardware accelerators into the docker container
+
+    docker-run-uadk-dev.sh ubuntu <give_it_a_name>
+

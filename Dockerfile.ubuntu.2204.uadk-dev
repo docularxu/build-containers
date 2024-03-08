@@ -1,0 +1,49 @@
+FROM ubuntu:22.04
+
+RUN apt update && \
+    apt -y -q install autoconf automake libtool numactl \
+	   gcc automake autoconf libtool make git \
+	   pkg-config libnuma-dev \
+	   build-essential cmake \
+	   sudo
+
+RUN apt -y -q install python2 python3
+RUN apt -y -q install zlib1g-dev  
+RUN apt install -y -q libncurses-dev bison flex \
+	 libssl-dev libelf-dev dwarves
+
+RUN apt install -y -q bc sudo
+RUN apt install -y -q cpio
+RUN apt install -y -q binutils
+RUN apt install -y -q kmod vim git
+RUN apt install -y -q man-db manpages-dev
+
+# Test 2 framework Perl
+RUN apt install -y -q perl cpanminus
+RUN cpanm Test2
+RUN cpanm Test2::V0
+
+# handy tools
+RUN apt install -y -q tree htop
+
+# nasm, General-purpose x86 assembler
+RUN apt install -y -q nasm
+
+# rsyslog service, required by UADK logs
+RUN apt install -y -q rsyslog
+# RUN /usr/sbin/rsyslogd && tail -f /dev/null
+
+# enable EPOLL mode in root (without this, uadk CPU_rate can reach 100%)
+ENV WD_DIGEST_EPOLL_EN=1
+
+# add new user: guodong, with sudo previlidge
+RUN groupadd -g 1000 -o guodong
+RUN useradd -u 1000 -g 1000 -G sudo -ms /bin/bash guodong
+RUN echo "guodong:guodong" | chpasswd
+
+USER guodong
+
+# enable EPOLL mode for user guodong (without this, uadk CPU_rate can reach 100%)
+ENV WD_DIGEST_EPOLL_EN=1
+
+CMD ["bash"]
