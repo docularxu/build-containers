@@ -25,7 +25,7 @@ RUN yum install -y -q alsa-lib-devel
 RUN yum install -y -q fontconfig-devel
 RUN yum install -y -q openssl-devel.aarch64
 RUN yum -y -q groupinstall "Development Tools"
-RUN yum -y -q cmake
+RUN yum install -y -q cmake
 
 # Set the user and working directory to /home/guodong
 USER guodong
