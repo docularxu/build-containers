@@ -46,4 +46,5 @@ USER guodong
 # enable EPOLL mode for user guodong (without this, uadk CPU_rate can reach 100%)
 ENV WD_DIGEST_EPOLL_EN=1
 
+COPY metadata/uadk-set-env.sh /home/guodong
 CMD ["bash"]
