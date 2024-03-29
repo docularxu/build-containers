@@ -1,41 +1,53 @@
 FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && \
-    apt -y -q install autoconf automake libtool numactl \
+RUN apt-get update && apt-get install -y apt-utils
+
+RUN apt-get -y -q install autoconf automake libtool numactl \
 	   gcc automake autoconf libtool make git \
 	   pkg-config libnuma-dev \
 	   build-essential cmake \
 	   sudo
 
-RUN apt -y -q install python2 python3
-RUN apt -y -q install zlib1g-dev  
-RUN apt install -y -q libncurses-dev bison flex \
+RUN apt-get -y -q install python2 python3
+RUN apt-get -y -q install zlib1g-dev
+RUN apt-get install -y -q libncurses-dev bison flex \
 	 libssl-dev libelf-dev dwarves
 
-RUN apt install -y -q bc sudo
-RUN apt install -y -q cpio
-RUN apt install -y -q binutils
-RUN apt install -y -q kmod vim git
-RUN apt install -y -q man-db manpages-dev
+RUN apt-get install -y -q bc sudo
+RUN apt-get install -y -q cpio
+RUN apt-get install -y -q binutils
+RUN apt-get install -y -q kmod vim git
+RUN apt-get install -y -q man-db manpages-dev
 
 # Test 2 framework Perl
-RUN apt install -y -q perl cpanminus
+RUN apt-get install -y -q perl cpanminus
 RUN cpanm Test2
 RUN cpanm Test2::V0
 
 # handy tools
-RUN apt install -y -q tree htop
+RUN apt-get install -y -q tree htop
 
 # nasm, General-purpose x86 assembler
-RUN apt install -y -q nasm
+RUN apt-get install -y -q nasm
 
 # rsyslog service, required by UADK logs
-RUN apt install -y -q rsyslog
-# RUN /usr/sbin/rsyslogd && tail -f /dev/null
+RUN apt-get install -y -q rsyslog
 
-# enable EPOLL mode in root (without this, uadk CPU_rate can reach 100%)
-ENV WD_DIGEST_EPOLL_EN=1
+################################
+# JDK development requirement
+################################
+RUN apt-get install -y -q unzip zip jtreg
+RUN apt-get install -y -q libx11-dev libxext-dev libxrender-dev libxtst-dev libxt-dev
+RUN apt-get install -y -q libcups2-dev
+RUN apt-get install -y -q libfreetype6-dev
+RUN apt-get install -y -q libasound2-dev
+RUN apt-get install -y -q libfontconfig1-dev
+RUN apt-get install -y -q gawk wget
 
+################################
+# create a user account
+################################
 # add new user: guodong, with sudo previlidge
 RUN groupadd -g 1000 -o guodong
 RUN useradd -u 1000 -g 1000 -G sudo -ms /bin/bash guodong
@@ -43,8 +55,9 @@ RUN echo "guodong:guodong" | chpasswd
 
 USER guodong
 
-# enable EPOLL mode for user guodong (without this, uadk CPU_rate can reach 100%)
-ENV WD_DIGEST_EPOLL_EN=1
+############################################
+# Install UADK environment setting script
+############################################
+COPY ./metadata/uadk-set-env.sh /home/guodong
 
-COPY metadata/uadk-set-env.sh /home/guodong
 CMD ["bash"]

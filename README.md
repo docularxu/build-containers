@@ -16,6 +16,8 @@ This dockerfile can be used to create a build and test environment for OpenSSL v
 
 # JDK and Bisheng JDK build environment: Dockerfile.oeuler.2303.jdk-dev
 
+(Note: Dockerfile.ubuntu.2204.uadk-dev can also be used for JDK build and development.)
+
 This Dockerfile is for BishengJDK 8 build and testing. It based on openEuler 23.03, pre-installed with JDK built dependencies.
 
     docker build -t jdk-dev:openeuler.2303 - < Dockerfile.oeuler.2303.jdk-dev
@@ -25,7 +27,7 @@ This Dockerfile is for BishengJDK 8 build and testing. It based on openEuler 23.
 
 This Dockerfile is used to create a build and test environment for UADK and it is based on ubuntu:22.04 image dated on 8/Mar/2024.
 
-    docker build -t uadk-dev:ubuntu.2204 - < Dockerfile.ubuntu.2204.uadk-dev
+    docker build -f Dockerfile.ubuntu.2204.uadk-dev . -t uadk-jdk-dev:ubuntu.2204
 
 To consume the image built, one need to run the following shell script to map hardware accelerators into the docker container
 
