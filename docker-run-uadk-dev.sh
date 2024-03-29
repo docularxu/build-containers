@@ -12,29 +12,22 @@ fi
 echo "Distribution: $1"
 echo "Docker Name: $2"
 
-# Prefixes of devices to be mapped with their target indices
-declare -A device_target_indices=(
-    ["hisi_hpre"]="0 1"
-    ["hisi_sec2"]="2 3"
-    ["hisi_zip"]="4 5"
+# Prefixes of devices to be mapped
+declare -A device_prefixes=(
+  ["hisi_hpre"]=""
+  ["hisi_sec2"]=""
+  ["hisi_zip"]=""
 )
 
 device_args=""
-for device_prefix in "${!device_target_indices[@]}"; do
-    # Get target indices for the current device type
-    read -ra targets <<< "${device_target_indices[$device_prefix]}"
-    target_index=0
-
-    # Find all devices that match the prefix
-    for device_path in /dev/${device_prefix}-*; do
-        if [[ -e $device_path && $target_index -lt ${#targets[@]} ]]; then
-            # Extract the actual device index
-            actual_index=$(echo "$device_path" | grep -o '[^-]*$')
-            # Construct and append the device mapping, mapping actual index to the specified target index
-            device_args+="--device=${device_path}:/dev/${device_prefix}-${targets[target_index]}:rwm "
-            ((target_index++))
-        fi
-    done
+for device_prefix in "${!device_prefixes[@]}"; do
+  # Find all devices that match the prefix
+  for device_path in /dev/${device_prefix}-*; do
+    if [[ -e $device_path ]]; then
+      # Construct the device mapping directly using the device path
+      device_args+="--device=${device_path}:${device_path}:rwm "
+    fi
+  done
 done
 
 # Remove trailing space
@@ -45,6 +38,9 @@ volume="-v /home/guodong/working:/mnt"
 
 # Determine the Docker image based on the first argument
 case "$1" in
+    "ubuntu-jdk-uadk")
+        image="uadk-jdk-dev:ubuntu.2204"
+        ;;
     "ubuntu")
         image="uadk-dev:ubuntu.2204"
         ;;
