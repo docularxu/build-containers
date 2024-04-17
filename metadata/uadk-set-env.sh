@@ -26,10 +26,6 @@ export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 
 # set queue number
-export WD_RSA_CTX_NUM="sync:2@0,async:4@0"
-export WD_DH_CTX_NUM="sync:2@0,async:4@0"
-export WD_CIPHER_CTX_NUM="sync:2@2,async:4@2"
-export WD_DIGEST_CTX_NUM="sync:2@2,async:4@2" # set Async mode
 export WD_CIPHER_EPOLL_EN=1
 export WD_AEAD_EPOLL_EN=1
 export WD_DIGEST_EPOLL_EN=1
